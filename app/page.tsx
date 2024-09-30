@@ -7,7 +7,9 @@ import { ChangeEventHandler, useState, useEffect } from "react";
 export default function Home() {
   const [uploadedImage, setUploadedImage] = useState<File | null>(null);
   const [imagePreviewUrl, setImagePreviewUrl] = useState<string>("");
-  const [exifData, setExifData] = useState<Record<string, unknown> | null>(null);
+  const [exifData, setExifData] = useState<Record<string, unknown> | null>(
+    null
+  );
   const [errorMessage, setErrorMessage] = useState<string | null>(null);
   const [loading, setLoading] = useState<boolean>(false);
 
@@ -20,11 +22,11 @@ export default function Home() {
         image.src = event.target?.result as string;
         image.onload = function () {
           try {
-            // @ts-expect-error type errors from exif library
+            // @ts-expect-error type error with exif library
             exif.getData(image, function () {
-              // @ts-expect-error type errors from exif library
+              // @ts-expect-error type error with exif library
               const exifData: Record<string, unknown> = exif.getAllTags(this);
-              resolve(exifData);  // Ensure it resolves with correct type
+              resolve(exifData);
             });
           } catch {
             reject("No EXIF data found");
@@ -46,7 +48,6 @@ export default function Home() {
     });
   };
 
-  // Handle image upload and update uploadedImage state
   const handleImageUpload: ChangeEventHandler<HTMLInputElement> = async (
     event
   ) => {
@@ -54,12 +55,11 @@ export default function Home() {
     const file = files?.[0];
 
     if (file) {
-      setUploadedImage(file); // Set the uploaded image, which will trigger the effect below
-      setErrorMessage(null);  // Reset any previous errors
+      setUploadedImage(file);
+      setErrorMessage(null);
     }
   };
 
-  // Use effect to process the image whenever uploadedImage changes
   useEffect(() => {
     const processImage = async () => {
       if (uploadedImage) {
@@ -68,7 +68,9 @@ export default function Home() {
           const imgUrl = await fileToDataString(uploadedImage);
           setImagePreviewUrl(imgUrl);
 
-          const exif: Record<string, unknown> = await extractExifData(uploadedImage); // Proper type assignment
+          const exif: Record<string, unknown> = await extractExifData(
+            uploadedImage
+          ); // Proper type assignment
           setExifData(exif);
         } catch {
           setExifData(null);
@@ -84,8 +86,6 @@ export default function Home() {
 
   return (
     <div className="container mx-auto py-4">
-      <h1 className="text-3xl font-bold text-center mb-6">EXIF Reader</h1>
-
       <Card className="w-full mx-auto p-6 max-w-3xl">
         <CardContent>
           <div className="flex flex-col items-center justify-center rounded-lg p-8">
@@ -117,7 +117,7 @@ export default function Home() {
 
           {/* Display EXIF Data */}
           {exifData && !loading && (
-            <div className="mt-4 p-4 bg-gray-100 rounded-lg">
+            <div className="mt-4 p-4 rounded-lg">
               <h2 className="text-xl font-semibold">Image EXIF Data</h2>
               <pre className="whitespace-pre-wrap text-sm">
                 {JSON.stringify(exifData, null, 2)}

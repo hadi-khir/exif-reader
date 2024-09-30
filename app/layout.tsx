@@ -1,6 +1,8 @@
 import type { Metadata } from "next";
 import localFont from "next/font/local";
 import "./globals.css";
+import { ThemeProvider } from "@/components/theme-provider";
+import { ModeToggle } from "@/components/mode-toggle";
 
 const geistSans = localFont({
   src: "./fonts/GeistVF.woff",
@@ -28,7 +30,20 @@ export default function RootLayout({
       <body
         className={`${geistSans.variable} ${geistMono.variable} antialiased`}
       >
-        {children}
+        <ThemeProvider
+          attribute="class"
+          defaultTheme="system"
+          enableSystem
+          disableTransitionOnChange
+        >
+          <div className="w-full max-w-3xl mx-auto">
+            <div className="flex justify-between p-6 items-center mb-6">
+              <h1 className="text-3xl font-bold text-center">EXIF Reader</h1>
+              <ModeToggle />
+            </div>
+          </div>
+          {children}
+        </ThemeProvider>
       </body>
     </html>
   );
