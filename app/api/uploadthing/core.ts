@@ -7,7 +7,8 @@ export const ourFileRouter = {
         image: { maxFileSize: "4MB", maxFileCount: 1 },
     }).onUploadComplete(async ({ metadata, file }) => {
 
-        const userId = (metadata as any).userId;
+        //@ts-expect-error metadata null error expected.
+        const userId = (metadata).userId;
         console.log("Upload complete for userId:", userId);
         console.log("file url", file.url);
     }),
