@@ -3,7 +3,6 @@
 import exif from "exif-js";
 import { Card, CardContent } from "@/components/ui/card";
 import { ChangeEventHandler, useState, useEffect } from "react";
-import { ModeToggle } from "@/components/mode-toggle";
 
 export default function Home() {
   const [uploadedImage, setUploadedImage] = useState<File | null>(null);
