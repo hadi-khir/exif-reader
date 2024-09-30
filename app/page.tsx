@@ -87,11 +87,6 @@ export default function Home() {
 
   return (
     <div className="container mx-auto py-4">
-      <div className="flex justify-between items-center mb-6">
-        <h1 className="text-3xl font-bold text-center">EXIF Reader</h1>
-        <ModeToggle />
-      </div>
-
       <Card className="w-full mx-auto p-6 max-w-3xl">
         <CardContent>
           <div className="flex flex-col items-center justify-center rounded-lg p-8">
