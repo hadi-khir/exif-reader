@@ -3,7 +3,7 @@
 import exif from "exif-js";
 import { Card, CardContent } from "@/components/ui/card";
 import { ChangeEventHandler, useState, useEffect } from "react";
-import { ModeToggle } from "@/components/mode-toggle"; // Import ModeToggle
+import { ModeToggle } from "@/components/mode-toggle";
 
 export default function Home() {
   const [uploadedImage, setUploadedImage] = useState<File | null>(null);
@@ -23,11 +23,11 @@ export default function Home() {
         image.src = event.target?.result as string;
         image.onload = function () {
           try {
-            // @ts-expect-error
+            // @ts-expect-error type error with exif library
             exif.getData(image, function () {
-              // @ts-expect-error
+              // @ts-expect-error type error with exif library
               const exifData: Record<string, unknown> = exif.getAllTags(this);
-              resolve(exifData); // Ensure it resolves with correct type
+              resolve(exifData);
             });
           } catch {
             reject("No EXIF data found");
@@ -49,7 +49,6 @@ export default function Home() {
     });
   };
 
-  // Handle image upload and update uploadedImage state
   const handleImageUpload: ChangeEventHandler<HTMLInputElement> = async (
     event
   ) => {
@@ -57,12 +56,11 @@ export default function Home() {
     const file = files?.[0];
 
     if (file) {
-      setUploadedImage(file); // Set the uploaded image, which will trigger the effect below
-      setErrorMessage(null); // Reset any previous errors
+      setUploadedImage(file);
+      setErrorMessage(null);
     }
   };
 
-  // Use effect to process the image whenever uploadedImage changes
   useEffect(() => {
     const processImage = async () => {
       if (uploadedImage) {
@@ -89,10 +87,9 @@ export default function Home() {
 
   return (
     <div className="container mx-auto py-4">
-      {/* Header with ModeToggle */}
       <div className="flex justify-between items-center mb-6">
         <h1 className="text-3xl font-bold text-center">EXIF Reader</h1>
-        <ModeToggle /> {/* Mode Toggle Button */}
+        <ModeToggle />
       </div>
 
       <Card className="w-full mx-auto p-6 max-w-3xl">
