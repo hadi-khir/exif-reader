@@ -52,11 +52,10 @@ export default function Home() {
   };
 
   const handleImageUpload = async (files: File[]) => {
-    const file = files[0]; // Access the first file in the array
-
+    const file = files[0];
     if (file) {
-      setUploadedImage(file); // Store the uploaded image file
-      setErrorMessage(null); // Clear any previous error messages
+      setUploadedImage(file);
+      setErrorMessage(null);
       setFilename(file.name);
     }
   };
@@ -71,7 +70,7 @@ export default function Home() {
 
           const exif: Record<string, unknown> = await extractExifData(
             uploadedImage
-          ); // Proper type assignment
+          );
           setExifData(exif);
         } catch {
           setExifData(null);
@@ -97,8 +96,8 @@ export default function Home() {
         <CardContent>
           <div className="flex flex-col items-center justify-center rounded-lg border-gray-300 p-8">
             <ImageUploadDropzone onFileSelect={handleImageUpload} />
-            {/* Display filename */}
 
+            {/* Display filename */}
             {filename && (
               <div className="mt-4">
                 <p>
