@@ -1,3 +1,4 @@
+import { useTheme } from "next-themes";
 import { useCallback } from "react";
 import { useDropzone } from "react-dropzone";
 
@@ -26,6 +27,8 @@ export default function ImageUploadDropzone({
     maxSize: 4 * 1024 * 1024, // 4MB limit
   });
 
+  const { theme } = useTheme();
+
   return (
     <div
       {...getRootProps()}
@@ -35,18 +38,32 @@ export default function ImageUploadDropzone({
     >
       <input {...getInputProps()} />
       <div className="flex flex-col items-center">
-        <svg
-          xmlns="http://www.w3.org/2000/svg"
-          height="48px"
-          viewBox="0 0 24 24"
-          width="48px"
-          fill="#000000"
-        >
-          <path d="M0 0h24v24H0V0z" fill="none" />
-          <path d="M18 20H4V6h9V4H4c-1.1 0-2 .9-2 2v14c0 1.1.9 2 2 2h14c1.1 0 2-.9 2-2v-9h-2v9zm-7.79-3.17l-1.96-2.36L5.5 18h11l-3.54-4.71zM20 4V1h-2v3h-3c.01.01 0 2 0 2h3v2.99c.01.01 2 0 2 0V6h3V4h-3z" />
-        </svg>
-        <p className="text-gray-500 mt-2">Choose files or drag and drop</p>
-        <p className="text-gray-400">Image (4MB)</p>
+        {theme === "dark" ? (
+          <svg
+            xmlns="http://www.w3.org/2000/svg"
+            height="48px"
+            viewBox="0 0 24 24"
+            width="48px"
+            className="text-white"
+            fill="#ffffff"
+          >
+            <path d="M0 0h24v24H0V0z" fill="none" />
+            <path d="M18 20H4V6h9V4H4c-1.1 0-2 .9-2 2v14c0 1.1.9 2 2 2h14c1.1 0 2-.9 2-2v-9h-2v9zm-7.79-3.17l-1.96-2.36L5.5 18h11l-3.54-4.71zM20 4V1h-2v3h-3c.01.01 0 2 0 2h3v2.99c.01.01 2 0 2 0V6h3V4h-3z" />
+          </svg>
+        ) : (
+          <svg
+            xmlns="http://www.w3.org/2000/svg"
+            height="48px"
+            viewBox="0 0 24 24"
+            width="48px"
+            fill="#000000"
+          >
+            <path d="M0 0h24v24H0V0z" fill="none" />
+            <path d="M18 20H4V6h9V4H4c-1.1 0-2 .9-2 2v14c0 1.1.9 2 2 2h14c1.1 0 2-.9 2-2v-9h-2v9zm-7.79-3.17l-1.96-2.36L5.5 18h11l-3.54-4.71zM20 4V1h-2v3h-3c.01.01 0 2 0 2h3v2.99c.01.01 2 0 2 0V6h3V4h-3z" />
+          </svg>
+        )}
+        <p className="mt-2">Choose files or drag and drop</p>
+        <p>Image (4MB)</p>
         <button
           type="button"
           className="mt-4 px-4 py-2 bg-blue-600 text-white rounded-md"

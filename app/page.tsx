@@ -4,6 +4,7 @@ import exif from "exif-js";
 import { Card, CardContent } from "@/components/ui/card";
 import { useState, useEffect } from "react";
 import ImageUploadDropzone from "@/components/image-dropzone";
+import { ModeToggle } from "@/components/mode-toggle";
 
 export default function Home() {
   const [uploadedImage, setUploadedImage] = useState<File | null>(null);
@@ -86,9 +87,15 @@ export default function Home() {
 
   return (
     <div className="container mx-auto py-4">
-      <Card className="w-full mx-auto p-6 max-w-3xl">
+      <div className="w-full max-w-3xl mx-auto">
+        <div className="flex justify-between p-6 items-center mb-6">
+          <h1 className="text-3xl font-bold text-center">EXIF Reader</h1>
+          <ModeToggle />
+        </div>
+      </div>
+      <Card className="w-full mx-auto border-gray-300 p-6 max-w-3xl">
         <CardContent>
-          <div className="flex flex-col items-center justify-center rounded-lg p-8">
+          <div className="flex flex-col items-center justify-center rounded-lg border-gray-300 p-8">
             <ImageUploadDropzone onFileSelect={handleImageUpload} />
             {/* Display filename */}
 
