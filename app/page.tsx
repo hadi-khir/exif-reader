@@ -2,7 +2,8 @@
 
 import exif from "exif-js";
 import { Card, CardContent } from "@/components/ui/card";
-import { ChangeEventHandler, useState, useEffect } from "react";
+import { useState, useEffect } from "react";
+import ImageUploadDropzone from "@/components/image-dropzone";
 
 export default function Home() {
   const [uploadedImage, setUploadedImage] = useState<File | null>(null);
@@ -12,6 +13,7 @@ export default function Home() {
   );
   const [errorMessage, setErrorMessage] = useState<string | null>(null);
   const [loading, setLoading] = useState<boolean>(false);
+  const [filename, setFilename] = useState("");
 
   // Extract EXIF data function with proper return type
   const extractExifData = (file: File): Promise<Record<string, unknown>> => {
@@ -48,15 +50,13 @@ export default function Home() {
     });
   };
 
-  const handleImageUpload: ChangeEventHandler<HTMLInputElement> = async (
-    event
-  ) => {
-    const files = event.target.files;
-    const file = files?.[0];
+  const handleImageUpload = async (files: File[]) => {
+    const file = files[0]; // Access the first file in the array
 
     if (file) {
-      setUploadedImage(file);
-      setErrorMessage(null);
+      setUploadedImage(file); // Store the uploaded image file
+      setErrorMessage(null); // Clear any previous error messages
+      setFilename(file.name);
     }
   };
 
@@ -89,12 +89,16 @@ export default function Home() {
       <Card className="w-full mx-auto p-6 max-w-3xl">
         <CardContent>
           <div className="flex flex-col items-center justify-center rounded-lg p-8">
-            <input
-              type="file"
-              className="focus:outline-none focus:ring"
-              onChange={handleImageUpload}
-              accept="image/*"
-            />
+            <ImageUploadDropzone onFileSelect={handleImageUpload} />
+            {/* Display filename */}
+
+            {filename && (
+              <div className="mt-4">
+                <p>
+                  File uploaded: <strong>{filename}</strong>
+                </p>
+              </div>
+            )}
           </div>
 
           {/* Display loading spinner */}
