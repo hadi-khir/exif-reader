@@ -3,11 +3,14 @@
 import exif from "exif-js";
 import { Card, CardContent } from "@/components/ui/card";
 import { ChangeEventHandler, useState, useEffect } from "react";
+import { ModeToggle } from "@/components/mode-toggle"; // Import ModeToggle
 
 export default function Home() {
   const [uploadedImage, setUploadedImage] = useState<File | null>(null);
   const [imagePreviewUrl, setImagePreviewUrl] = useState<string>("");
-  const [exifData, setExifData] = useState<Record<string, unknown> | null>(null);
+  const [exifData, setExifData] = useState<Record<string, unknown> | null>(
+    null
+  );
   const [errorMessage, setErrorMessage] = useState<string | null>(null);
   const [loading, setLoading] = useState<boolean>(false);
 
@@ -20,11 +23,11 @@ export default function Home() {
         image.src = event.target?.result as string;
         image.onload = function () {
           try {
-            // @ts-expect-error type errors from exif library
+            // @ts-expect-error
             exif.getData(image, function () {
-              // @ts-expect-error type errors from exif library
+              // @ts-expect-error
               const exifData: Record<string, unknown> = exif.getAllTags(this);
-              resolve(exifData);  // Ensure it resolves with correct type
+              resolve(exifData); // Ensure it resolves with correct type
             });
           } catch {
             reject("No EXIF data found");
@@ -55,7 +58,7 @@ export default function Home() {
 
     if (file) {
       setUploadedImage(file); // Set the uploaded image, which will trigger the effect below
-      setErrorMessage(null);  // Reset any previous errors
+      setErrorMessage(null); // Reset any previous errors
     }
   };
 
@@ -68,7 +71,9 @@ export default function Home() {
           const imgUrl = await fileToDataString(uploadedImage);
           setImagePreviewUrl(imgUrl);
 
-          const exif: Record<string, unknown> = await extractExifData(uploadedImage); // Proper type assignment
+          const exif: Record<string, unknown> = await extractExifData(
+            uploadedImage
+          ); // Proper type assignment
           setExifData(exif);
         } catch {
           setExifData(null);
@@ -84,7 +89,11 @@ export default function Home() {
 
   return (
     <div className="container mx-auto py-4">
-      <h1 className="text-3xl font-bold text-center mb-6">EXIF Reader</h1>
+      {/* Header with ModeToggle */}
+      <div className="flex justify-between items-center mb-6">
+        <h1 className="text-3xl font-bold text-center">EXIF Reader</h1>
+        <ModeToggle /> {/* Mode Toggle Button */}
+      </div>
 
       <Card className="w-full mx-auto p-6 max-w-3xl">
         <CardContent>
@@ -117,7 +126,7 @@ export default function Home() {
 
           {/* Display EXIF Data */}
           {exifData && !loading && (
-            <div className="mt-4 p-4 bg-gray-100 rounded-lg">
+            <div className="mt-4 p-4 rounded-lg">
               <h2 className="text-xl font-semibold">Image EXIF Data</h2>
               <pre className="whitespace-pre-wrap text-sm">
                 {JSON.stringify(exifData, null, 2)}
