@@ -5,6 +5,7 @@ import { Card, CardContent } from "@/components/ui/card";
 import { useState, useEffect } from "react";
 import ImageUploadDropzone from "@/components/image-dropzone";
 import { ModeToggle } from "@/components/mode-toggle";
+import ExifDataDisplay from "@/components/exif-table";
 
 export default function Home() {
   const [uploadedImage, setUploadedImage] = useState<File | null>(null);
@@ -15,6 +16,7 @@ export default function Home() {
   const [errorMessage, setErrorMessage] = useState<string | null>(null);
   const [loading, setLoading] = useState<boolean>(false);
   const [filename, setFilename] = useState("");
+  const [fileSize, setFileSize] = useState(Number);
 
   // Extract EXIF data function with proper return type
   const extractExifData = (file: File): Promise<Record<string, unknown>> => {
@@ -51,12 +53,24 @@ export default function Home() {
     });
   };
 
+  const formatFileSize = (bytes: number): string => {
+    const sizes = ['Bytes', 'KB', 'MB', 'GB', 'TB'];
+  
+    if (bytes === 0) return '0 Bytes';
+  
+    const i = Math.floor(Math.log(bytes) / Math.log(1024));
+    const fileSize = parseFloat((bytes / Math.pow(1024, i)).toFixed(2));
+  
+    return `${fileSize} ${sizes[i]}`;
+  }
+
   const handleImageUpload = async (files: File[]) => {
     const file = files[0];
     if (file) {
       setUploadedImage(file);
       setErrorMessage(null);
       setFilename(file.name);
+      setFileSize(file.size);
     }
   };
 
@@ -103,6 +117,9 @@ export default function Home() {
                 <p>
                   File uploaded: <strong>{filename}</strong>
                 </p>
+                <p>
+                  File size: <strong>{formatFileSize(fileSize)}</strong>
+                </p>
               </div>
             )}
           </div>
@@ -128,10 +145,7 @@ export default function Home() {
           {/* Display EXIF Data */}
           {exifData && !loading && (
             <div className="mt-4 p-4 rounded-lg">
-              <h2 className="text-xl font-semibold">Image EXIF Data</h2>
-              <pre className="whitespace-pre-wrap text-sm">
-                {JSON.stringify(exifData, null, 2)}
-              </pre>
+              <ExifDataDisplay exifData={exifData} />
             </div>
           )}
 
