@@ -1,13 +1,12 @@
 import { useState } from 'react';
 
 interface ExifDataProps {
-  exifData: Record<string, unknown> | null; // Adjusted to handle null
+  exifData: Record<string, unknown> | null;
 }
 
 export default function ExifDataDisplay({ exifData }: ExifDataProps) {
-  const [showRawJson, setShowRawJson] = useState(false); // Toggle raw JSON display
+  const [showRawJson, setShowRawJson] = useState(false);
 
-  // If exifData is null, render fallback content
   if (!exifData || Object.keys(exifData).length === 0) {
     return <p>No EXIF data available.</p>;
   }

@@ -1,11 +1,12 @@
 "use client";
 
-import exif from "exif-js";
 import { Card, CardContent } from "@/components/ui/card";
 import { useState, useEffect } from "react";
-import ImageUploadDropzone from "@/components/image-dropzone";
+import ImageUploadDropzone from "@/components/image-upload-dropzone";
 import { ModeToggle } from "@/components/mode-toggle";
-import ExifDataDisplay from "@/components/exif-table";
+import ExifDataDisplay from "@/components/exif-data-display";
+import { extractExifData, formatFileSize } from "@/lib/utils";
+import Image from "next/image";
 
 export default function Home() {
   const [uploadedImage, setUploadedImage] = useState<File | null>(null);
@@ -18,31 +19,6 @@ export default function Home() {
   const [filename, setFilename] = useState("");
   const [fileSize, setFileSize] = useState(Number);
 
-  // Extract EXIF data function with proper return type
-  const extractExifData = (file: File): Promise<Record<string, unknown>> => {
-    return new Promise((resolve, reject) => {
-      const reader = new FileReader();
-      reader.onload = function (event) {
-        const image = new Image();
-        image.src = event.target?.result as string;
-        image.onload = function () {
-          try {
-            // @ts-expect-error type error with exif library
-            exif.getData(image, function () {
-              // @ts-expect-error type error with exif library
-              const exifData: Record<string, unknown> = exif.getAllTags(this);
-              resolve(exifData);
-            });
-          } catch {
-            reject("No EXIF data found");
-          }
-        };
-      };
-      reader.onerror = reject;
-      reader.readAsDataURL(file);
-    });
-  };
-
   // Convert file to Data URL for image preview
   const fileToDataString = (file: File) => {
     return new Promise<string>((resolve, reject) => {
@@ -52,17 +28,6 @@ export default function Home() {
       reader.onload = () => resolve(reader.result as string);
     });
   };
-
-  const formatFileSize = (bytes: number): string => {
-    const sizes = ['Bytes', 'KB', 'MB', 'GB', 'TB'];
-  
-    if (bytes === 0) return '0 Bytes';
-  
-    const i = Math.floor(Math.log(bytes) / Math.log(1024));
-    const fileSize = parseFloat((bytes / Math.pow(1024, i)).toFixed(2));
-  
-    return `${fileSize} ${sizes[i]}`;
-  }
 
   const handleImageUpload = async (files: File[]) => {
     const file = files[0];
@@ -134,7 +99,7 @@ export default function Home() {
           {/* Display image preview */}
           {imagePreviewUrl && (
             <div className="mt-4">
-              <img
+              <Image
                 src={imagePreviewUrl}
                 alt="Uploaded Preview"
                 className="max-w-full h-auto mx-auto"

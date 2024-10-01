@@ -1,3 +1,5 @@
+"use client"
+
 import { useTheme } from "next-themes";
 import { useCallback } from "react";
 import { useDropzone } from "react-dropzone";
@@ -9,6 +11,9 @@ interface ImageUploadDropzoneProps {
 export default function ImageUploadDropzone({
   onFileSelect,
 }: ImageUploadDropzoneProps) {
+
+  const { theme, systemTheme } = useTheme();
+
   const onDrop = useCallback(
     (acceptedFiles: File[]) => {
       if (onFileSelect) {
@@ -21,12 +26,32 @@ export default function ImageUploadDropzone({
   const { getRootProps, getInputProps, isDragActive } = useDropzone({
     onDrop,
     accept: {
-      "image/*": [], // Accept only images
+      "image/*": [],
     },
-    maxFiles: 1, // Limit to one file
+    maxFiles: 1,
   });
 
-  const { theme } = useTheme();
+  const SvgIcon = ({ fill, className }: { fill: string; className?: string }) => (
+    <svg
+      xmlns="http://www.w3.org/2000/svg"
+      height="48px"
+      viewBox="0 0 24 24"
+      width="48px"
+      fill={fill}
+      className={className}
+    >
+      <path d="M0 0h24v24H0V0z" fill="none" />
+      <path d="M18 20H4V6h9V4H4c-1.1 0-2 .9-2 2v14c0 1.1.9 2 2 2h14c1.1 0 2-.9 2-2v-9h-2v9zm-7.79-3.17l-1.96-2.36L5.5 18h11l-3.54-4.71zM20 4V1h-2v3h-3c.01.01 0 2 0 2h3v2.99c.01.01 2 0 2 0V6h3V4h-3z" />
+    </svg>
+  );
+
+  const getSvgIcon = () => {
+    const isDark = theme === "dark" || (theme === "system" && systemTheme === "dark");
+    const fill = isDark ? "#ffffff" : "#000000";
+    const className = isDark ? "text-white" : "text-black";
+
+    return <SvgIcon fill={fill} className={className} />;
+  };
 
   return (
     <div
@@ -37,30 +62,7 @@ export default function ImageUploadDropzone({
     >
       <input {...getInputProps()} />
       <div className="flex flex-col items-center">
-        {theme === "dark" ? (
-          <svg
-            xmlns="http://www.w3.org/2000/svg"
-            height="48px"
-            viewBox="0 0 24 24"
-            width="48px"
-            className="text-white"
-            fill="#ffffff"
-          >
-            <path d="M0 0h24v24H0V0z" fill="none" />
-            <path d="M18 20H4V6h9V4H4c-1.1 0-2 .9-2 2v14c0 1.1.9 2 2 2h14c1.1 0 2-.9 2-2v-9h-2v9zm-7.79-3.17l-1.96-2.36L5.5 18h11l-3.54-4.71zM20 4V1h-2v3h-3c.01.01 0 2 0 2h3v2.99c.01.01 2 0 2 0V6h3V4h-3z" />
-          </svg>
-        ) : (
-          <svg
-            xmlns="http://www.w3.org/2000/svg"
-            height="48px"
-            viewBox="0 0 24 24"
-            width="48px"
-            fill="#000000"
-          >
-            <path d="M0 0h24v24H0V0z" fill="none" />
-            <path d="M18 20H4V6h9V4H4c-1.1 0-2 .9-2 2v14c0 1.1.9 2 2 2h14c1.1 0 2-.9 2-2v-9h-2v9zm-7.79-3.17l-1.96-2.36L5.5 18h11l-3.54-4.71zM20 4V1h-2v3h-3c.01.01 0 2 0 2h3v2.99c.01.01 2 0 2 0V6h3V4h-3z" />
-          </svg>
-        )}
+        {getSvgIcon()}
         <p className="mt-2">Choose an image or drag and drop</p>
         <button
           type="button"
