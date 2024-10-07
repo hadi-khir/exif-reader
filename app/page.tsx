@@ -107,6 +107,29 @@ export default function Home() {
             </div>
           )}
 
+          {!exifData && (
+            <div className="mt-4 p-4 rounded-lg">
+              <h2 className="text-xl font-semibold mb-2">What is EXIF Data?</h2>
+              <p className="mb-4">
+                EXIF (Exchangeable Image File Format) data is metadata embedded
+                in photos taken by digital cameras. It includes information like
+                the camera settings, the date and time the photo was taken, the
+                camera model, and sometimes even the GPS location where the
+                photo was captured.
+              </p>
+
+              <hr className="my-4" />
+
+              <h2 className="text-lg font-semibold mt-4">Privacy by default</h2>
+              <p className="mt-2">
+                This application runs entirely in your browser, ensuring that
+                your images and their metadata never leave your device. All
+                processing is done locally, keeping your data private and
+                secure.
+              </p>
+            </div>
+          )}
+
           {/* Display EXIF Data */}
           {exifData && !loading && (
             <div className="mt-4 p-4 rounded-lg">
