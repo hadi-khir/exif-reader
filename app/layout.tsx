@@ -18,6 +18,7 @@ const geistMono = localFont({
 export const metadata: Metadata = {
   title: "Exif Reader by Phook",
   description: "Exif reader powered by Phook",
+  metadataBase: new URL("https://exifreader.vercel.app"),
 };
 
 export default function RootLayout({
