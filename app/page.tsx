@@ -19,6 +19,9 @@ export default function Home() {
   const [filename, setFilename] = useState("");
   const [fileSize, setFileSize] = useState(Number);
 
+  // State for mock EXIF data
+  const [mockExifData, setMockExifData] = useState<Record<string, unknown> | null>(null);
+
   // Convert file to Data URL for image preview
   const fileToDataString = (file: File) => {
     return new Promise<string>((resolve, reject) => {
@@ -36,6 +39,19 @@ export default function Home() {
       setErrorMessage(null);
       setFilename(file.name);
       setFileSize(file.size);
+    }
+  };
+
+  const fetchMockExifData = async () => {
+    setLoading(true);
+    try {
+      const response = await fetch('/api/exif');
+      const data = await response.json();
+      setMockExifData(data);
+    } catch (error) {
+      setErrorMessage("Error fetching mock EXIF data.");
+    } finally {
+      setLoading(false);
     }
   };
 
@@ -130,10 +146,28 @@ export default function Home() {
             </div>
           )}
 
+          {/* Button to generate mock EXIF data */}
+          <div className="mt-6 text-center">
+            <button
+              className="px-4 py-2 bg-blue-600 text-white rounded-lg"
+              onClick={fetchMockExifData}
+              disabled={loading}
+            >
+              {loading ? "Generating..." : "Generate Mock EXIF Data"}
+            </button>
+          </div>
+
           {/* Display EXIF Data */}
           {exifData && !loading && (
             <div className="mt-4 p-4 rounded-lg">
               <ExifDataDisplay exifData={exifData} />
+            </div>
+          )}
+
+          {/* Display Mock EXIF Data */}
+          {mockExifData && !loading && !exifData && (
+            <div className="mt-4 p-4 rounded-lg">
+              <ExifDataDisplay exifData={mockExifData} />
             </div>
           )}
 
