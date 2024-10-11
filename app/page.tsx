@@ -49,7 +49,7 @@ export default function Home() {
       const data = await response.json();
       setMockExifData(data);
     } catch (error) {
-      setErrorMessage("Error fetching mock EXIF data.");
+      setErrorMessage(`Error fetching mock EXIF data: ${error}`);
     } finally {
       setLoading(false);
     }
