@@ -147,15 +147,18 @@ export default function Home() {
           )}
 
           {/* Button to generate mock EXIF data */}
-          <div className="mt-6 text-center">
-            <button
-              className="px-4 py-2 bg-blue-600 text-white rounded-lg"
-              onClick={fetchMockExifData}
-              disabled={loading}
-            >
-              {loading ? "Generating..." : "Generate Mock EXIF Data"}
-            </button>
-          </div>
+          {
+            !exifData &&
+            <div className="mt-6 text-center">
+              <button
+                className="px-4 py-2 bg-blue-600 text-white rounded-lg"
+                onClick={fetchMockExifData}
+                disabled={loading}
+              >
+                {loading ? "Generating..." : "Generate Mock EXIF Data"}
+              </button>
+            </div>
+          }
 
           {/* Display EXIF Data */}
           {exifData && !loading && (
